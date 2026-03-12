@@ -1,0 +1,61 @@
+name: dance_ai
+description: "DanceAI - App de corrección de baile con IA y red social"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  
+  # Firebase
+  firebase_core: ^3.12.1
+  firebase_auth: ^5.5.2
+  cloud_firestore: ^5.6.6
+  firebase_storage: ^12.4.4
+  firebase_messaging: ^15.2.4
+  
+  # IA / Camara
+  google_mlkit_pose_detection: ^0.12.0
+  camera: ^0.11.1
+  
+  # Social / Video
+  video_player: ^2.9.3
+  chewie: ^1.10.0
+  image_picker: ^1.1.2
+  
+  # Mapa
+  google_maps_flutter: ^2.12.0
+  geoflutterfire2: ^3.0.3
+  geolocator: ^13.0.3
+  
+  # Estado y navegacion
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.8.1
+  
+  # UI
+  flutter_animate: ^4.5.2
+  cached_network_image: ^3.4.1
+  permission_handler: ^11.4.0
+  
+  # Utils
+  math: ^1.0.0
+  uuid: ^4.5.1
+  intl: ^0.20.2
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/reference_poses/
+    - assets/images/
+    - assets/animations/
