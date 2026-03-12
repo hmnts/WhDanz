@@ -1,5 +1,5 @@
-name: dance_ai
-description: "DanceAI - App de corrección de baile con IA y red social"
+name: whdanz
+description: "WhDanz - App de corrección de baile con IA y red social"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -28,9 +28,8 @@ dependencies:
   image_picker: ^1.1.2
   
   # Mapa
-  google_maps_flutter: ^2.12.0
-  geoflutterfire2: ^3.0.3
-  geolocator: ^13.0.3
+  google_maps_flutter: ^2.10.0
+  geolocator: ^12.0.0
   
   # Estado y navegacion
   flutter_riverpod: ^2.6.1
@@ -42,7 +41,6 @@ dependencies:
   permission_handler: ^11.4.0
   
   # Utils
-  math: ^1.0.0
   uuid: ^4.5.1
   intl: ^0.20.2
   shared_preferences: ^2.5.3

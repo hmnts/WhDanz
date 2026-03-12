@@ -1,0 +1,19 @@
+{
+  "name": "Paso básico de salsa",
+  "style": "salsa",
+  "frames": [
+    {
+      "frameIndex": 0,
+      "angles": {
+        "left_elbow": 145.2,
+        "right_elbow": 78.5,
+        "left_knee": 165.0,
+        "right_knee": 148.3,
+        "left_hip_flexion": 12.5,
+        "right_hip_flexion": -8.2,
+        "spine_lateral": 3.1
+      },
+      "tolerance": 15.0
+    }
+  ]
+}

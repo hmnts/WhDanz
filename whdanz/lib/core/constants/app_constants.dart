@@ -42,7 +42,7 @@ class AppDimensions {
 }
 
 class AppStrings {
-  static const String appName = 'DanceAI';
+  static const String appName = 'WhDanz';
   static const String tagline = 'Mejora tu baile con IA';
   
   // Auth
