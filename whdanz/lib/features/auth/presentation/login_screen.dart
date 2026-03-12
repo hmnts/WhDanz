@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/auth_notifier.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:whdanz/features/auth/domain/auth_notifier.dart';
+import 'package:whdanz/core/constants/app_constants.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

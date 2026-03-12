@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import '../../domain/angle_calculator.dart';
-import '../../domain/pose_matcher.dart';
-import 'skeleton_painter.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:whdanz/features/pose_detection/domain/angle_calculator.dart';
+import 'package:whdanz/features/pose_detection/domain/pose_matcher.dart';
+import 'package:whdanz/features/pose_detection/presentation/skeleton_painter.dart';
+import 'package:whdanz/core/constants/app_constants.dart';
 
 class CameraScreen extends StatefulWidget {
   final String poseId;
@@ -56,7 +56,6 @@ class _CameraScreenState extends State<CameraScreen> {
   void _initializePoseDetector() {
     final options = PoseDetectorOptions(
       mode: PoseDetectionMode.single,
-      model: PoseDetectionModel.lite,
     );
     _poseDetector = PoseDetector(options: options);
   }
@@ -114,7 +113,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void _processPose(Pose pose, Size imageSize) {
     final landmarks = <int, PoseLandmark>{};
-    for (final landmark in pose.landmarks) {
+    for (final landmark in pose.landmarks.values) {
       landmarks[landmark.type.index] = landmark;
     }
 

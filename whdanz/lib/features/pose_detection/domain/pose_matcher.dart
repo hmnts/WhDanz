@@ -99,7 +99,7 @@ class PoseMatcher {
     }
 
     final avgDeviation = totalDeviation / jointCount;
-    final score = ((180 - avgDeviation.clamp(0, 180)) / 180 * 100).clamp(0, 100);
+    final score = ((180 - avgDeviation.clamp(0.0, 180.0)) / 180 * 100).clamp(0.0, 100.0).toDouble();
 
     return PoseMatchResult(
       score: score,

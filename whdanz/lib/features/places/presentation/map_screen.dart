@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../domain/place_model.dart';
+import 'package:whdanz/core/constants/app_constants.dart';
+import 'package:whdanz/features/places/domain/place_model.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -12,7 +12,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final List<PlaceModel> _places = [
-    const PlaceModel(
+    PlaceModel(
       id: '1',
       name: 'Salsa Club Latina',
       address: 'Calle Main 123',
@@ -22,9 +22,9 @@ class _MapScreenState extends State<MapScreen> {
       rating: 4.5,
       reviewsCount: 28,
       addedBy: 'user1',
-      createdAt: null,
+      createdAt: DateTime.now(),
     ),
-    const PlaceModel(
+    PlaceModel(
       id: '2',
       name: 'Academia de Baile Madrid',
       address: 'Plaza Centro 45',
@@ -34,9 +34,9 @@ class _MapScreenState extends State<MapScreen> {
       rating: 4.8,
       reviewsCount: 56,
       addedBy: 'user2',
-      createdAt: null,
+      createdAt: DateTime.now(),
     ),
-    const PlaceModel(
+    PlaceModel(
       id: '3',
       name: 'Parque de la Danza',
       address: 'Avenida Parque s/n',
@@ -46,7 +46,7 @@ class _MapScreenState extends State<MapScreen> {
       rating: 4.2,
       reviewsCount: 15,
       addedBy: 'user3',
-      createdAt: null,
+      createdAt: DateTime.now(),
     ),
   ];
 

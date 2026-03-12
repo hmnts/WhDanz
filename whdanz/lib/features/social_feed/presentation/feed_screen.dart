@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../domain/post_model.dart';
+import 'package:whdanz/core/constants/app_constants.dart';
+import 'package:whdanz/features/social_feed/domain/post_model.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});

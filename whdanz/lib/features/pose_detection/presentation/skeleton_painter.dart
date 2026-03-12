@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:whdanz/core/constants/app_constants.dart';
 
 class SkeletonPainter extends CustomPainter {
   final Pose pose;
@@ -58,7 +58,7 @@ class SkeletonPainter extends CustomPainter {
     final landmarks = pose.landmarks;
     final points = <int, Offset>{};
 
-    for (final landmark in landmarks) {
+    for (final landmark in landmarks.values) {
       final x = landmark.x * scaleX;
       final y = landmark.y * scaleY;
       points[landmark.type.index] = Offset(x, y);
@@ -76,7 +76,7 @@ class SkeletonPainter extends CustomPainter {
       }
     }
 
-    for (final landmark in landmarks) {
+    for (final landmark in landmarks.values) {
       final x = landmark.x * scaleX;
       final y = landmark.y * scaleY;
       final point = Offset(x, y);
