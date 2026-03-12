@@ -1,0 +1,21 @@
+{
+  "name": "K-Pop - Coreografía",
+  "style": "kpop",
+  "frames": [
+    {
+      "frameIndex": 0,
+      "angles": {
+        "left_elbow": 170.0,
+        "right_elbow": 170.0,
+        "left_knee": 175.0,
+        "right_knee": 175.0,
+        "left_hip_flexion": 0.0,
+        "right_hip_flexion": 0.0,
+        "spine_lateral": 0.0,
+        "left_shoulder_abduction": 45.0,
+        "right_shoulder_abduction": 45.0
+      },
+      "tolerance": 15.0
+    }
+  ]
+}

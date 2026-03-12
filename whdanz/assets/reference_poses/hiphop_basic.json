@@ -1,0 +1,21 @@
+{
+  "name": "Hip Hop - Basics",
+  "style": "hiphop",
+  "frames": [
+    {
+      "frameIndex": 0,
+      "angles": {
+        "left_elbow": 90.0,
+        "right_elbow": 90.0,
+        "left_knee": 160.0,
+        "right_knee": 160.0,
+        "left_hip_flexion": 10.0,
+        "right_hip_flexion": 10.0,
+        "spine_lateral": 5.0,
+        "left_shoulder_abduction": 30.0,
+        "right_shoulder_abduction": 30.0
+      },
+      "tolerance": 20.0
+    }
+  ]
+}
