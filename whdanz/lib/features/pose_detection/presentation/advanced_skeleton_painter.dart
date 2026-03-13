@@ -72,7 +72,7 @@ class AdvancedSkeletonPainter extends CustomPainter {
     final landmarks = pose.landmarks;
     final points = <int, Offset>{};
 
-    for (final landmark in landmarks) {
+    for (final landmark in landmarks.values) {
       if (landmark.likelihood >= confidenceThreshold) {
         final x = landmark.x * scaleX;
         final y = landmark.y * scaleY;
@@ -106,7 +106,7 @@ class AdvancedSkeletonPainter extends CustomPainter {
       }
     }
 
-    for (final landmark in landmarks) {
+    for (final landmark in landmarks.values) {
       if (landmark.likelihood >= confidenceThreshold) {
         final x = landmark.x * scaleX;
         final y = landmark.y * scaleY;
