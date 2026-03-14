@@ -13,7 +13,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    final isOwnProfile = authState.user?.uid == userId || userId == 'me';
+    final isOwnProfile = authState.user?.id == userId || userId == 'me';
 
     return Scaffold(
       body: Container(
