@@ -4,6 +4,11 @@ package-lock.json
 package.json
 functions/
 
+# API
+api/node_modules/
+api/package-lock.json
+!api/package.json
+
 # Firebase
 firebase-debug.log
 firebase.json
