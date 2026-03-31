@@ -11,6 +11,15 @@ import '../../features/pose_detection/presentation/pose_selection_screen.dart';
 import '../../features/pose_detection/presentation/practice_history_screen.dart';
 import '../../features/social_feed/presentation/feed_screen.dart';
 import '../../features/social_feed/presentation/create_post_screen.dart';
+import '../../features/social_feed/presentation/stories_screen.dart';
+import '../../features/social_feed/presentation/story_viewer_screen.dart';
+import '../../features/social_feed/presentation/create_story_screen.dart';
+import '../../features/social_feed/presentation/reels_screen.dart';
+import '../../features/social_feed/presentation/create_reel_screen.dart';
+import '../../features/social_feed/presentation/messages_screen.dart';
+import '../../features/social_feed/presentation/chat_screen.dart';
+import '../../features/social_feed/presentation/new_message_screen.dart';
+import '../../features/social_feed/presentation/comments_screen.dart';
 import '../../features/places/presentation/map_screen.dart';
 import '../../features/places/presentation/place_detail_screen.dart';
 import '../../features/places/presentation/add_place_screen.dart';
@@ -106,6 +115,60 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/edit-profile',
       builder: (context, state) => const EditProfileScreen(),
+    ),
+    GoRoute(
+      path: '/feed/stories',
+      builder: (context, state) => const StoriesScreen(),
+      routes: [
+        GoRoute(
+          path: 'view/:index',
+          builder: (context, state) {
+            final index = int.tryParse(state.pathParameters['index'] ?? '0') ?? 0;
+            return StoryViewerScreen(initialIndex: index);
+          },
+        ),
+        GoRoute(
+          path: 'create',
+          builder: (context, state) => const CreateStoryScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/feed/reels',
+      builder: (context, state) => const ReelsScreen(),
+      routes: [
+        GoRoute(
+          path: 'create',
+          builder: (context, state) => const CreateReelScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/feed/messages',
+      builder: (context, state) => const MessagesScreen(),
+      routes: [
+        GoRoute(
+          path: 'new',
+          builder: (context, state) => const NewMessageScreen(),
+        ),
+        GoRoute(
+          path: ':participantId',
+          builder: (context, state) {
+            final participantId = state.pathParameters['participantId'] ?? '';
+            return ChatScreen(
+              participantId: participantId,
+              participantName: 'Usuario',
+            );
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/feed/comments/:postId',
+      builder: (context, state) {
+        final postId = state.pathParameters['postId'] ?? '';
+        return CommentsScreen(postId: postId);
+      },
     ),
   ],
 );
