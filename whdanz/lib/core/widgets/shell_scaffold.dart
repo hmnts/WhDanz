@@ -39,9 +39,9 @@ class _ShellScaffoldState extends State<ShellScaffold>
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/feed')) return 0;
-    if (location.startsWith('/camera')) return 1;
-    if (location.startsWith('/map')) return 2;
-    if (location.startsWith('/profile')) return 3;
+    if (location.startsWith('/camera')) return 2;
+    if (location.startsWith('/map')) return 3;
+    if (location.startsWith('/profile')) return 4;
     return 0;
   }
 
@@ -53,12 +53,15 @@ class _ShellScaffoldState extends State<ShellScaffold>
         context.go('/feed');
         break;
       case 1:
-        context.go('/camera');
+        context.push('/feed/reels');
         break;
       case 2:
-        context.go('/map');
+        context.go('/camera');
         break;
       case 3:
+        context.go('/map');
+        break;
+      case 4:
         context.go('/profile/me');
         break;
     }
@@ -86,7 +89,7 @@ class _ShellScaffoldState extends State<ShellScaffold>
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
-            height: 70,
+            height: 80,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -120,25 +123,32 @@ class _ShellScaffoldState extends State<ShellScaffold>
                   onTap: () => _onItemTapped(context, 0),
                 ),
                 _NavItem(
+                  icon: Icons.reels_outlined,
+                  activeIcon: Icons.reels,
+                  label: 'Reels',
+                  isSelected: selectedIndex == 1,
+                  onTap: () => context.push('/feed/reels'),
+                ),
+                _NavItem(
                   icon: Icons.camera_alt_outlined,
                   activeIcon: Icons.camera_alt,
                   label: AppStrings.camera,
-                  isSelected: selectedIndex == 1,
-                  onTap: () => _onItemTapped(context, 1),
+                  isSelected: selectedIndex == 2,
+                  onTap: () => _onItemTapped(context, 2),
                 ),
                 _NavItem(
                   icon: Icons.map_outlined,
                   activeIcon: Icons.map,
                   label: AppStrings.map,
-                  isSelected: selectedIndex == 2,
-                  onTap: () => _onItemTapped(context, 2),
+                  isSelected: selectedIndex == 3,
+                  onTap: () => _onItemTapped(context, 3),
                 ),
                 _NavItem(
                   icon: Icons.person_outline,
                   activeIcon: Icons.person,
                   label: AppStrings.profile,
-                  isSelected: selectedIndex == 3,
-                  onTap: () => _onItemTapped(context, 3),
+                  isSelected: selectedIndex == 4,
+                  onTap: () => _onItemTapped(context, 4),
                 ),
               ],
             ),
