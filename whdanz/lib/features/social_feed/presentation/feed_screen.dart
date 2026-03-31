@@ -26,6 +26,7 @@ class FeedScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
+            _buildStoriesBar(context),
             SliverPadding(
               padding: const EdgeInsets.only(bottom: AppDimensions.xxl),
               sliver: SliverList(
@@ -66,8 +67,12 @@ class FeedScreen extends StatelessWidget {
           onPressed: () => context.go('/search'),
         ),
         _buildIconButton(
-          icon: Icons.notifications_outlined,
+          icon: Icons.favorite_border,
           onPressed: () => context.go('/notifications'),
+        ),
+        _buildIconButton(
+          icon: Icons.send,
+          onPressed: () => context.push('/feed/messages'),
         ),
         const SizedBox(width: AppDimensions.sm),
       ],
@@ -87,6 +92,95 @@ class FeedScreen extends StatelessWidget {
       child: IconButton(
         icon: Icon(icon, size: 22),
         onPressed: onPressed,
+      ),
+    );
+  }
+
+  Widget _buildStoriesBar(BuildContext context) {
+    final stories = [
+      {'name': 'Tu historia', 'isOwn': true},
+      {'name': 'Maria', 'isOwn': false},
+      {'name': 'Juan', 'isOwn': false},
+      {'name': 'Sofia', 'isOwn': false},
+      {'name': 'Carlos', 'isOwn': false},
+      {'name': 'Ana', 'isOwn': false},
+    ];
+
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 100,
+        margin: const EdgeInsets.symmetric(vertical: AppDimensions.sm),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
+          itemCount: stories.length,
+          itemBuilder: (context, index) {
+            final story = stories[index];
+            final isOwn = story['isOwn'] as bool;
+            final name = story['name'] as String;
+
+            return GestureDetector(
+              onTap: () {
+                if (isOwn) {
+                  context.push('/feed/stories/create');
+                } else {
+                  context.push('/feed/stories/view/$index');
+                }
+              },
+              child: Container(
+                width: 70,
+                margin: const EdgeInsets.only(right: AppDimensions.sm),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        gradient: isOwn
+                            ? AppColors.primaryGradient
+                            : LinearGradient(
+                                colors: [
+                                  AppColors.surfaceLight,
+                                  AppColors.surfaceElevated,
+                                ],
+                              ),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isOwn
+                              ? Colors.transparent
+                              : AppColors.surface,
+                          width: 3,
+                        ),
+                      ),
+                      child: Center(
+                        child: isOwn
+                            ? const Icon(Icons.add, color: Colors.white, size: 28)
+                            : Text(
+                                name[0].toUpperCase(),
+                                style: TextStyle(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
