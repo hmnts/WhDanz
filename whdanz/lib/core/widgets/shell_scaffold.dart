@@ -123,8 +123,8 @@ class _ShellScaffoldState extends State<ShellScaffold>
                   onTap: () => _onItemTapped(context, 0),
                 ),
                 _NavItem(
-                  icon: Icons.reels_outlined,
-                  activeIcon: Icons.reels,
+                  icon: Icons.smart_display_outlined,
+                  activeIcon: Icons.smart_display,
                   label: 'Reels',
                   isSelected: selectedIndex == 1,
                   onTap: () => context.push('/feed/reels'),
