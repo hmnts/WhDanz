@@ -8,7 +8,7 @@ class CreateReelScreen extends StatefulWidget {
   const CreateReelScreen({super.key});
 
   @override
-  State<CreateReelScreen> createState() _CreateReelScreenState();
+  State<CreateReelScreen> createState() => _CreateReelScreenState();
 }
 
 class _CreateReelScreenState extends State<CreateReelScreen> {
