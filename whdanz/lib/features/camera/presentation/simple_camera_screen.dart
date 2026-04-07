@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whdanz/core/constants/app_constants.dart';
 import 'package:whdanz/core/theme/app_theme.dart';
@@ -64,20 +65,72 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Cámara'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.background,
+              AppColors.backgroundSecondary,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildAppBar(context),
+              Expanded(child: _selectedImage != null ? _buildPreview() : _buildOptions()),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.sm,
+        vertical: AppDimensions.sm,
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.surfaceLight,
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, size: 20),
+              onPressed: () => context.pop(),
+            ),
+          ),
+          const SizedBox(width: AppDimensions.md),
+          ShaderMask(
+            shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
+            child: Text(
+              'Cámara',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const Spacer(),
           if (_selectedImage != null)
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: _clearImage,
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceLight,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.close, size: 20),
+                onPressed: _clearImage,
+              ),
             ),
         ],
       ),
-      body: _selectedImage != null ? _buildPreview() : _buildOptions(),
     );
   }
 
@@ -91,28 +144,32 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
             Container(
               padding: const EdgeInsets.all(AppDimensions.xl),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                gradient: AppColors.primaryGradient,
                 shape: BoxShape.circle,
+                boxShadow: AppShadows.glow,
               ),
               child: Icon(
                 Icons.camera_alt,
                 size: 64,
-                color: AppColors.primary,
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: AppDimensions.xl),
-            Text(
-              'Sube una foto o tómate una',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            ShaderMask(
+              shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
+              child: Text(
+                'Sube una foto o tómate una',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
             const SizedBox(height: AppDimensions.sm),
             Text(
               'Captura tu momento de baile',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.white70,
+                color: AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: AppDimensions.xxl),
@@ -123,18 +180,10 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
+                    child: GradientButton(
+                      text: 'Tomar Foto',
+                      icon: Icons.camera_alt,
                       onPressed: _takePhoto,
-                      icon: const Icon(Icons.camera_alt),
-                      label: const Text('Tomar Foto'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                        ),
-                      ),
                     ),
                   ),
                   const SizedBox(height: AppDimensions.md),
@@ -146,7 +195,7 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
                       label: const Text('Elegir de Galería'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                        side: BorderSide(color: AppColors.surfaceLight),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
@@ -170,6 +219,9 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
             margin: const EdgeInsets.all(AppDimensions.md),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+              border: Border.all(
+                color: AppColors.surfaceLight.withValues(alpha: 0.3),
+              ),
             ),
             clipBehavior: Clip.antiAlias,
             child: Image.file(
@@ -187,9 +239,13 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
             top: AppDimensions.md,
           ),
           decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(AppDimensions.radiusXl),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.surface.withValues(alpha: 0.0),
+                AppColors.surface,
+              ],
             ),
           ),
           child: Column(
@@ -213,29 +269,25 @@ class _SimpleCameraScreenState extends State<SimpleCameraScreen> {
                       label: const Text('Nueva'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                        side: BorderSide(color: AppColors.surfaceLight),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                     ),
                   ),
                   const SizedBox(width: AppDimensions.md),
                   Expanded(
-                    child: ElevatedButton.icon(
+                    child: GradientButton(
+                      text: 'Subir',
+                      icon: Icons.upload,
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('Foto seleccionada - Sube desde el feed'),
+                            content: const Text('Foto seleccionada - Crea una publicación para subirla'),
                             backgroundColor: AppColors.primary,
                           ),
                         );
+                        context.pop();
                       },
-                      icon: const Icon(Icons.upload),
-                      label: const Text('Subir'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
                     ),
                   ),
                 ],
