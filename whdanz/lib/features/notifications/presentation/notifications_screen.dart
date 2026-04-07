@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whdanz/core/constants/app_constants.dart';
 import 'package:whdanz/core/theme/app_theme.dart';
@@ -142,6 +143,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         'time': DateTime.now().subtract(const Duration(minutes: 5)),
         'read': false,
         'user': 'Maria Dance',
+        'userId': 'user1',
       },
       {
         'type': 'follow',
@@ -150,6 +152,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         'time': DateTime.now().subtract(const Duration(hours: 1)),
         'read': false,
         'user': 'Juan Baila',
+        'userId': 'user2',
       },
       {
         'type': 'comment',
@@ -158,6 +161,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         'time': DateTime.now().subtract(const Duration(hours: 3)),
         'read': true,
         'user': 'Sofia KPop',
+        'userId': 'user3',
       },
       {
         'type': 'achievement',
@@ -184,20 +188,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 }
 
-class _NotificationCard extends StatelessWidget {
+class _NotificationCard extends ConsumerWidget {
   final Map<String, dynamic> notification;
 
   const _NotificationCard({required this.notification});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isRead = notification['read'] as bool;
     final type = notification['type'] as String;
+    final userId = notification['userId'] as String?;
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppDimensions.sm),
       decoration: BoxDecoration(
-        color: isRead ? AppColors.surface : AppColors.surface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
         border: Border.all(
           color: isRead
@@ -215,24 +220,24 @@ class _NotificationCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: () => _handleNotificationTap(context, notification),
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
           child: Padding(
             padding: const EdgeInsets.all(AppDimensions.md),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildAvatar(),
+                _buildAvatar(notification),
                 const SizedBox(width: AppDimensions.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTitle(context),
+                      _buildTitle(notification),
                       const SizedBox(height: 4),
-                      _buildBody(context),
+                      _buildBody(notification),
                       const SizedBox(height: 6),
-                      _buildTime(context),
+                      _buildTime(notification),
                     ],
                   ),
                 ),
@@ -245,7 +250,29 @@ class _NotificationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar() {
+  void _handleNotificationTap(BuildContext context, Map<String, dynamic> notification) {
+    final type = notification['type'] as String;
+    final userId = notification['userId'] as String?;
+
+    switch (type) {
+      case 'like':
+      case 'follow':
+      case 'comment':
+        if (userId != null) {
+          context.push('/profile/$userId');
+        }
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Notificación de ${notification['title']}'),
+            backgroundColor: AppColors.primary,
+          ),
+        );
+    }
+  }
+
+  Widget _buildAvatar(Map<String, dynamic> notification) {
     final type = notification['type'] as String;
     final color = _getColor(type);
 
@@ -275,7 +302,7 @@ class _NotificationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
+  Widget _buildTitle(Map<String, dynamic> notification) {
     final isRead = notification['read'] as bool;
 
     return Text(
@@ -287,7 +314,7 @@ class _NotificationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(Map<String, dynamic> notification) {
     return Text(
       notification['body'] as String,
       style: TextStyle(
@@ -299,7 +326,7 @@ class _NotificationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTime(BuildContext context) {
+  Widget _buildTime(Map<String, dynamic> notification) {
     return Text(
       _formatTime(notification['time'] as DateTime),
       style: TextStyle(
