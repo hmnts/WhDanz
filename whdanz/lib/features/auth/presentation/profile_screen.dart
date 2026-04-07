@@ -34,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   _buildProfileHeader(context, authState, isOwnProfile),
-                  _buildStats(context),
+                  _buildStats(context, authState),
                   _buildActions(context, isOwnProfile),
                   _buildPracticeSection(context),
                   const SizedBox(height: 100),
@@ -162,7 +162,8 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStats(BuildContext context) {
+  Widget _buildStats(BuildContext context, AuthState authState) {
+    final user = authState.user;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimensions.lg),
       padding: const EdgeInsets.all(AppDimensions.md),
@@ -176,32 +177,50 @@ class ProfileScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem(context, '24', 'Publicaciones', Icons.photo_library_outlined),
+          _buildStatItem(context, '${user?.postsCount ?? 0}', 'Publicaciones', Icons.photo_library_outlined),
           _buildDivider(),
-          _buildStatItem(context, '1.2K', 'Seguidores', Icons.people_outline),
+          _buildStatItem(context, _formatCount(user?.followersCount ?? 0), 'Seguidores', Icons.people_outline),
           _buildDivider(),
-          _buildStatItem(context, '350', 'Siguiendo', Icons.person_add_outlined),
+          _buildStatItem(context, _formatCount(user?.followingCount ?? 0), 'Siguiendo', Icons.person_add_outlined),
         ],
       ),
     );
   }
 
+  String _formatCount(int count) {
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(1)}M';
+    } else if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(1)}K';
+    }
+    return count.toString();
+  }
+
   Widget _buildStatItem(BuildContext context, String value, String label, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, color: AppColors.primary, size: 24),
-        const SizedBox(height: AppDimensions.xs),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        if (label == 'Publicaciones') {
+          context.push('/profile/$userId/posts');
+        }
+      },
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 24),
+          const SizedBox(height: AppDimensions.xs),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: label == 'Publicaciones' ? AppColors.primary : null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
