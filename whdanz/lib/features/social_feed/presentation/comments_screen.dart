@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whdanz/core/constants/app_constants.dart';
@@ -340,6 +341,9 @@ class _CommentTile extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
                         ),
+                        recognizer: TapGestureRecognizer()..onTap = () {
+                          context.push('/profile/${comment.userId}');
+                        },
                       ),
                       TextSpan(
                         text: ' ${comment.content}',
