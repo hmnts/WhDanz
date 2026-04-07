@@ -437,22 +437,31 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           icon: Icons.location_on,
           iconColor: AppColors.error,
           title: 'Agregar ubicación',
-          onTap: () {},
+          onTap: () => _showComingSoon(context),
         ),
         _buildOptionTile(
           icon: Icons.people,
           iconColor: AppColors.primary,
           title: 'Etiquetar personas',
-          onTap: () {},
+          onTap: () => _showComingSoon(context),
         ),
         _buildOptionTile(
           icon: Icons.public,
           iconColor: AppColors.secondary,
           title: 'Visibilidad',
           subtitle: 'Público',
-          onTap: () {},
+          onTap: () => _showComingSoon(context),
         ),
       ],
+    );
+  }
+
+  void _showComingSoon(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Próximamente'),
+        backgroundColor: AppColors.primary,
+      ),
     );
   }
 
