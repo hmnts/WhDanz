@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/services/api_service.dart';
-import '../../../core/services/firebase_service.dart';
-import 'user_model.dart';
+import 'package:whdanz/core/services/api_service.dart';
+import 'package:whdanz/core/services/firebase_service.dart';
+import 'package:whdanz/features/auth/domain/user_model.dart';
 
 class AuthState {
   final UserModel? user;
@@ -34,9 +34,11 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   final ApiService _apiService;
   final FirebaseService _firebaseService;
+  Future<void>? _initFuture;
+  bool _isListeningToFirebase = false;
 
   AuthNotifier(this._apiService, this._firebaseService) : super(const AuthState()) {
-    _init();
+    initializeAuth();
   }
 
   Future<void> _init() async {
@@ -49,17 +51,28 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> initializeAuth() async {
-    await _init();
+    _initFuture ??= _init();
+    await _initFuture;
   }
 
   void _initFirebaseListener() {
-    _firebaseService.authStateChanges.listen((firebaseUser) {
-      if (firebaseUser != null) {
-        _loadUserProfile(firebaseUser.uid);
-      } else {
-        state = const AuthState();
-      }
-    });
+    if (_isListeningToFirebase) {
+      return;
+    }
+
+    _isListeningToFirebase = true;
+    try {
+      _firebaseService.authStateChanges.listen((firebaseUser) {
+        if (firebaseUser != null) {
+          _loadUserProfile(firebaseUser.uid);
+        } else {
+          state = const AuthState();
+        }
+      });
+    } catch (error) {
+      _isListeningToFirebase = false;
+      state = state.copyWith(isLoading: false, isAuthenticated: false);
+    }
   }
 
   Future<void> _verifyToken() async {
@@ -95,6 +108,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       }
     } catch (e) {
       state = state.copyWith(isLoading: false, isAuthenticated: false);
+      _initFirebaseListener();
     }
   }
 
@@ -186,6 +200,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> signOut() async {
     await _apiService.logout();
+    try {
+      await _firebaseService.signOut();
+    } catch (error) {
+      // Firebase may be unavailable in local API-only runs.
+    }
     state = const AuthState();
   }
 
