@@ -4,6 +4,51 @@ const admin = require('firebase-admin');
 
 const router = express.Router();
 
+const firebaseAuthRequest = async (endpoint, payload) => {
+  const apiKey = process.env.FIREBASE_WEB_API_KEY;
+
+  if (!apiKey) {
+    const error = new Error('FIREBASE_WEB_API_KEY no está configurada');
+    error.status = 500;
+    throw error;
+  }
+
+  const response = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:${endpoint}?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, returnSecureToken: true })
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const error = new Error(data.error?.message || 'Firebase Auth error');
+    error.status = response.status;
+    error.code = data.error?.message;
+    throw error;
+  }
+
+  return data;
+};
+
+const authErrorMessage = (code) => {
+  switch (code) {
+    case 'EMAIL_EXISTS':
+      return 'El correo electrónico ya está en uso';
+    case 'EMAIL_NOT_FOUND':
+    case 'INVALID_PASSWORD':
+    case 'INVALID_LOGIN_CREDENTIALS':
+      return 'Credenciales inválidas';
+    case 'WEAK_PASSWORD : Password should be at least 6 characters':
+      return 'La contraseña debe tener al menos 6 caracteres';
+    default:
+      return 'No se pudo completar la autenticación';
+  }
+};
+
 router.post('/register',
   body('email').isEmail().normalizeEmail(),
   body('password').isLength({ min: 6 }),
@@ -17,14 +62,16 @@ router.post('/register',
     const { email, password, displayName } = req.body;
 
     try {
-      const userRecord = await req.admin.auth().createUser({
+      const authData = await firebaseAuthRequest('signUp', {
         email,
-        password,
-        displayName
+        password
       });
+      const uid = authData.localId;
 
-      await req.db.collection('users').doc(userRecord.uid).set({
-        id: userRecord.uid,
+      const userRecord = await req.admin.auth().updateUser(uid, { displayName });
+
+      await req.db.collection('users').doc(uid).set({
+        id: uid,
         email,
         displayName,
         photoURL: null,
@@ -36,25 +83,20 @@ router.post('/register',
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
 
-      const customToken = await req.admin.auth().createCustomToken(userRecord.uid);
-
       res.status(201).json({
         success: true,
         user: {
-          uid: userRecord.uid,
+          uid,
           email: userRecord.email,
           displayName: userRecord.displayName
         },
-        token: customToken
+        token: authData.idToken
       });
     } catch (error) {
       console.error('Registration error:', error);
-      
-      if (error.code === 'auth/email-already-exists') {
-        return res.status(400).json({ error: 'El correo electrónico ya está en uso' });
-      }
-      
-      res.status(500).json({ error: error.message });
+
+      const status = error.status && error.status < 500 ? 400 : 500;
+      res.status(status).json({ error: authErrorMessage(error.code) });
     }
   }
 );
@@ -71,9 +113,11 @@ router.post('/login',
     const { email, password } = req.body;
 
     try {
-      const userRecord = await req.admin.auth().getUserByEmail(email);
-
-      const customToken = await req.admin.auth().createCustomToken(userRecord.uid);
+      const authData = await firebaseAuthRequest('signInWithPassword', {
+        email,
+        password
+      });
+      const userRecord = await req.admin.auth().getUser(authData.localId);
 
       res.json({
         success: true,
@@ -83,16 +127,12 @@ router.post('/login',
           displayName: userRecord.displayName,
           photoURL: userRecord.photoURL
         },
-        token: customToken
+        token: authData.idToken
       });
     } catch (error) {
       console.error('Login error:', error);
-      
-      if (error.code === 'auth/user-not-found') {
-        return res.status(401).json({ error: 'Usuario no encontrado' });
-      }
-      
-      res.status(401).json({ error: 'Credenciales inválidas' });
+
+      res.status(401).json({ error: authErrorMessage(error.code) });
     }
   }
 );

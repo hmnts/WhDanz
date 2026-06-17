@@ -33,7 +33,10 @@ Edita `.env` con tu configuración:
 ```env
 PORT=3000
 GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json
+FIREBASE_WEB_API_KEY=tu_api_key_web_de_firebase
 ```
+
+`FIREBASE_WEB_API_KEY` es necesaria para que login y registro validen credenciales con Firebase Auth y devuelvan ID tokens compatibles con `/api/auth/verify`.
 
 ### 3. Instalar dependencias
 
@@ -76,13 +79,13 @@ El servidor correrá en `http://localhost:3000`
 
 ## Uso desde Flutter
 
-La URL base de la API está configurada en `lib/core/services/api_service.dart`:
+La URL base de la API se puede configurar al ejecutar Flutter:
 
-```dart
-static const String baseUrl = 'http://10.0.2.2:3000/api';
+```bash
+flutter run --dart-define=WHDANZ_API_BASE_URL=http://localhost:3000/api
 ```
 
-**Nota:** `10.0.2.2` es el alias para localhost del emulador de Android. Para dispositivo físico, usa la IP de tu computadora.
+Si no se define, la app usa `http://10.0.2.2:3000/api` en emulador Android y `http://localhost:3000/api` en el resto de plataformas. Para dispositivo físico, usa la IP de tu computadora con `--dart-define`.
 
 ## Formato de respuestas
 
